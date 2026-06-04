@@ -114,6 +114,12 @@ const JIMENG_CONFIGS = [
 const running = new Map();
 let mainWindow;
 
+function getAppIconPath() {
+  return app.isPackaged
+    ? path.join(process.resourcesPath, "app.asar", "build", "icon.ico")
+    : path.resolve(__dirname, "..", "build", "icon.ico");
+}
+
 function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1180,
@@ -122,6 +128,7 @@ function createWindow() {
     minHeight: 680,
     backgroundColor: "#f5f7fb",
     title: "Updream Proxy Manager",
+    icon: getAppIconPath(),
     autoHideMenuBar: true,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),

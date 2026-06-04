@@ -9,15 +9,14 @@
   <body>
     <div class="app-shell">
       <aside class="icon-rail" aria-label="主导航">
-        <div class="avatar">U</div>
+        <div class="avatar"><img src="./assets/logo.png" alt="Updream Proxy Manager" /></div>
         <nav class="rail-nav">
-          <button class="rail-item active" title="仪表盘">▦</button>
-          <button class="rail-item" title="服务">◫</button>
-          <button class="rail-item" title="密钥">◎</button>
-          <button class="rail-item" title="日志">☰</button>
-          <button class="rail-item" title="设置">⚙</button>
+          <button class="rail-item active" data-page-target="dashboard" title="仪表盘">▦</button>
+          <button class="rail-item" data-page-target="services" title="服务">◫</button>
+          <button class="rail-item" data-page-target="logs" title="日志">☰</button>
+          <button class="rail-item" data-page-target="settings" title="设置">⚙</button>
         </nav>
-        <button class="rail-item rail-bottom" title="夜间模式">◐</button>
+        <button class="rail-item rail-bottom" id="themeToggleBtn" title="切换日间/夜间模式">◐</button>
       </aside>
 
       <main class="app-main">
@@ -26,7 +25,7 @@
             <button class="window-toggle" title="折叠菜单">▯</button>
             <div>
               <p class="eyebrow">Updream local adapter</p>
-              <h2>仪表盘</h2>
+              <h2 id="pageTitle">仪表盘</h2>
             </div>
           </div>
           <div class="topbar-actions">
@@ -37,30 +36,76 @@
         </header>
 
         <div class="page-scroll">
-          <section class="dashboard-cards">
-            <article class="metric-card blue">
-              <span>运行中服务</span>
-              <strong id="runningCount">0</strong>
-              <p>本地代理已启用</p>
-            </article>
-            <article class="metric-card amber">
-              <span>服务总数</span>
-              <strong id="totalCount">4</strong>
-              <p>图片 / 视频 / CLI</p>
-            </article>
-            <article class="metric-card green">
-              <span>Updream 配置</span>
-              <strong>8</strong>
-              <p>代理配置 + 即梦 CLI</p>
-            </article>
-            <article class="metric-card purple">
-              <span>版本</span>
-              <strong>1.0.3</strong>
-              <p>支持 GitHub 更新检测</p>
-            </article>
+          <section class="page-view active" data-page="dashboard">
+            <section class="dashboard-cards">
+              <article class="metric-card blue">
+                <span>运行中服务</span>
+                <strong id="runningCount">0</strong>
+                <p>本地代理已启用</p>
+              </article>
+              <article class="metric-card amber">
+                <span>服务总数</span>
+                <strong id="totalCount">4</strong>
+                <p>图片 / 视频 / CLI</p>
+              </article>
+              <article class="metric-card green">
+                <span>Updream 配置</span>
+                <strong>8</strong>
+                <p>代理配置 + 即梦 CLI</p>
+              </article>
+              <article class="metric-card purple">
+                <span>版本</span>
+                <strong>1.0.3</strong>
+                <p>支持 GitHub 更新检测</p>
+              </article>
+            </section>
+
+            <section class="dashboard-split">
+              <section class="details-panel health-panel">
+                <div class="panel-header">
+                  <div>
+                    <p class="eyebrow">Runtime health</p>
+                    <h3>运行状态</h3>
+                  </div>
+                  <div class="status-pill">正常</div>
+                </div>
+                <div class="health-list">
+                  <div class="health-row">
+                    <span>本地代理服务</span>
+                    <strong><i class="status-dot running"></i><span id="healthServiceText">正常</span></strong>
+                  </div>
+                  <div class="health-row">
+                    <span>Updream 程序路径</span>
+                    <strong><i class="status-dot running"></i><span id="healthUpdreamText">正常</span></strong>
+                  </div>
+                  <div class="health-row">
+                    <span>即梦 CLI</span>
+                    <strong><i class="status-dot"></i><span id="healthDreaminaText">检测中</span></strong>
+                  </div>
+                  <div class="health-row">
+                    <span>GitHub 更新检测</span>
+                    <strong><i class="status-dot running"></i>可用</strong>
+                  </div>
+                </div>
+              </section>
+
+              <section class="details-panel quick-panel">
+                <div class="panel-header">
+                  <div>
+                    <p class="eyebrow">Quick actions</p>
+                    <h3>快捷操作</h3>
+                  </div>
+                </div>
+                <div class="quick-actions">
+                  <button class="primary" id="startConfigureOpenBtn">一键启动并打开 Updream</button>
+                  <button class="ghost" data-go-page="services">查看代理服务</button>
+                  <button class="ghost" data-go-page="settings">打开密钥设置</button>
+                </div>
+              </section>
+            </section>
           </section>
 
-          <section class="dashboard-split">
+          <section class="page-view" data-page="services">
             <section class="details-panel service-panel">
               <div class="panel-header">
                 <div>
@@ -72,80 +117,85 @@
               <nav id="serviceNav" class="service-nav"></nav>
               <div class="service-grid" id="serviceGrid"></div>
             </section>
+          </section>
 
-            <section class="dreamina-panel">
-              <div class="dreamina-copy">
-                <p class="eyebrow">Dreamina CLI</p>
-                <h3>即梦 CLI 安装器</h3>
-                <p>
-                  内置 Windows 版即梦 CLI。安装后会放到用户目录并写入用户 PATH，
-                  解决 Updream 偶发无法下载安装的问题。
-                </p>
+          <section class="page-view" data-page="logs">
+            <section class="details-panel logs-panel">
+              <div class="panel-header">
+                <div>
+                  <p class="eyebrow">Runtime</p>
+                  <h3>运行日志</h3>
+                </div>
+                <button class="ghost" id="clearLogBtn">清空日志</button>
               </div>
-              <div class="dreamina-status">
-                <div class="dreamina-state" id="dreaminaState">检测中</div>
-                <div class="dreamina-path" id="dreaminaPath">-</div>
-              </div>
-              <div class="dreamina-actions">
-                <button class="primary" id="installDreaminaBtn">安装/修复即梦 CLI</button>
-                <button class="ghost" id="loginDreaminaBtn">登录即梦</button>
-                <button class="ghost" id="refreshDreaminaBtn">重新检测</button>
-              </div>
+              <div id="logs" class="logs"></div>
             </section>
           </section>
 
-          <section class="details-panel setup-panel">
-            <div class="panel-header">
-              <div>
-                <p class="eyebrow">Auto setup</p>
-                <h3>密钥与 Updream 自动配置</h3>
-                <p class="panel-subtitle">会写入四个代理配置，并额外写入即梦 cli2.0 / fast / fast_vip / vip，API-Key 固定为 (cli-auth)。</p>
-                <p class="panel-subtitle">Agnes 图片和 Agnes 视频使用同一个 Agnes Key，填其中任意一个即可同步。</p>
-              </div>
-              <button class="primary" id="startConfigureOpenBtn">一键启动并打开 Updream</button>
-            </div>
-
-            <div class="setup-tabs" role="tablist" aria-label="自动配置页面">
-              <button class="setup-tab active" data-setup-tab="keys" role="tab" aria-selected="true">密钥配置</button>
-              <button class="setup-tab" data-setup-tab="configs" role="tab" aria-selected="false">配置清单</button>
-            </div>
-
-            <div class="setup-pane active" id="keysPane">
-              <div class="updream-path-row">
-                <label for="updreamExePath">Updream 程序</label>
-                <input id="updreamExePath" class="path-field" type="text" />
-                <button class="ghost" id="pickUpdreamBtn">选择</button>
-              </div>
-
-              <div class="key-grid" id="keyGrid"></div>
-
-              <div class="setup-actions">
-                <button class="ghost" id="saveSettingsBtn">保存密钥</button>
-                <button class="ghost" id="configureOnlyBtn">仅写入 Updream 配置</button>
-              </div>
-            </div>
-
-            <div class="setup-pane" id="configsPane">
-              <div class="config-pane-header">
-                <div>
-                  <h4>写入 Updream 的配置</h4>
-                  <p>这里用于核对 Provider、Base URL、模型和 Endpoint ID，日常使用无需手动复制。</p>
+          <section class="page-view" data-page="settings">
+            <section class="settings-grid">
+              <section class="details-panel setup-panel">
+                <div class="panel-header">
+                  <div>
+                    <p class="eyebrow">Auto setup</p>
+                    <h3>密钥与 Updream 自动配置</h3>
+                    <p class="panel-subtitle">会写入四个代理配置，并额外写入即梦 cli2.0 / fast / fast_vip / vip，API-Key 固定为 (cli-auth)。</p>
+                    <p class="panel-subtitle">Agnes 图片和 Agnes 视频使用同一个 Agnes Key，填其中任意一个即可同步。</p>
+                  </div>
                 </div>
-                <button class="ghost" id="copyAllBtn">复制全部配置</button>
-              </div>
-              <div id="configList" class="config-list compact"></div>
-            </div>
-          </section>
 
-          <section class="details-panel logs-panel">
-            <div class="panel-header">
-              <div>
-                <p class="eyebrow">Runtime</p>
-                <h3>运行日志</h3>
-              </div>
-              <button class="ghost" id="clearLogBtn">清空日志</button>
-            </div>
-            <div id="logs" class="logs"></div>
+                <div class="setup-tabs" role="tablist" aria-label="自动配置页面">
+                  <button class="setup-tab active" data-setup-tab="keys" role="tab" aria-selected="true">密钥配置</button>
+                  <button class="setup-tab" data-setup-tab="configs" role="tab" aria-selected="false">配置清单</button>
+                </div>
+
+                <div class="setup-pane active" id="keysPane">
+                  <div class="updream-path-row">
+                    <label for="updreamExePath">Updream 程序</label>
+                    <input id="updreamExePath" class="path-field" type="text" />
+                    <button class="ghost" id="pickUpdreamBtn">选择</button>
+                  </div>
+
+                  <div class="key-grid" id="keyGrid"></div>
+
+                  <div class="setup-actions">
+                    <button class="ghost" id="saveSettingsBtn">保存密钥</button>
+                    <button class="ghost" id="configureOnlyBtn">仅写入 Updream 配置</button>
+                  </div>
+                </div>
+
+                <div class="setup-pane" id="configsPane">
+                  <div class="config-pane-header">
+                    <div>
+                      <h4>写入 Updream 的配置</h4>
+                      <p>这里用于核对 Provider、Base URL、模型和 Endpoint ID，日常使用无需手动复制。</p>
+                    </div>
+                    <button class="ghost" id="copyAllBtn">复制全部配置</button>
+                  </div>
+                  <div id="configList" class="config-list compact"></div>
+                </div>
+              </section>
+
+              <section class="dreamina-panel">
+                <div class="dreamina-copy">
+                  <p class="eyebrow">Dreamina CLI</p>
+                  <h3>即梦 CLI 安装器</h3>
+                  <p>
+                    内置 Windows 版即梦 CLI。安装后会放到用户目录并写入用户 PATH，
+                    解决 Updream 偶发无法下载安装的问题。
+                  </p>
+                </div>
+                <div class="dreamina-status">
+                  <div class="dreamina-state" id="dreaminaState">检测中</div>
+                  <div class="dreamina-path" id="dreaminaPath">-</div>
+                </div>
+                <div class="dreamina-actions">
+                  <button class="primary" id="installDreaminaBtn">安装/修复即梦 CLI</button>
+                  <button class="ghost" id="loginDreaminaBtn">登录即梦</button>
+                  <button class="ghost" id="refreshDreaminaBtn">重新检测</button>
+                </div>
+              </section>
+            </section>
           </section>
         </div>
       </main>

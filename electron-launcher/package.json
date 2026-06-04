@@ -20,6 +20,7 @@
     "asar": true,
     "files": [
       "src/**/*",
+      "build/icon.ico",
       "package.json"
     ],
     "extraResources": [
@@ -51,6 +52,7 @@
       }
     ],
     "win": {
+      "icon": "build/icon.ico",
       "signAndEditExecutable": false,
       "forceCodeSigning": false,
       "target": [

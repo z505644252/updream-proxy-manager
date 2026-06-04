@@ -21,10 +21,25 @@ const saveSettingsBtn = document.querySelector("#saveSettingsBtn");
 const configureOnlyBtn = document.querySelector("#configureOnlyBtn");
 const startConfigureOpenBtn = document.querySelector("#startConfigureOpenBtn");
 const checkUpdatesBtn = document.querySelector("#checkUpdatesBtn");
+const pageTitle = document.querySelector("#pageTitle");
+const themeToggleBtn = document.querySelector("#themeToggleBtn");
+const pageViews = document.querySelectorAll(".page-view");
+const pageButtons = document.querySelectorAll("[data-page-target]");
+const pageLinks = document.querySelectorAll("[data-go-page]");
+const healthServiceText = document.querySelector("#healthServiceText");
+const healthUpdreamText = document.querySelector("#healthUpdreamText");
+const healthDreaminaText = document.querySelector("#healthDreaminaText");
 const setupTabs = document.querySelectorAll(".setup-tab");
 const setupPanes = {
   keys: document.querySelector("#keysPane"),
   configs: document.querySelector("#configsPane"),
+};
+
+const pageNames = {
+  dashboard: "仪表盘",
+  services: "本地代理服务",
+  logs: "运行日志",
+  settings: "系统设置",
 };
 
 function escapeHtml(value) {
@@ -51,6 +66,9 @@ function configText(service) {
 function render() {
   totalCount.textContent = services.length;
   runningCount.textContent = services.filter((item) => item.running).length;
+  const running = services.filter((item) => item.running).length;
+  healthServiceText.textContent = running ? `${running}/${services.length} 运行中` : "待启动";
+  healthServiceText.parentElement.querySelector(".status-dot").classList.toggle("running", running > 0);
 
   serviceNav.innerHTML = services
     .map(
@@ -108,6 +126,16 @@ function render() {
     .join("");
 }
 
+function setPage(pageName) {
+  for (const view of pageViews) {
+    view.classList.toggle("active", view.dataset.page === pageName);
+  }
+  for (const button of pageButtons) {
+    button.classList.toggle("active", button.dataset.pageTarget === pageName);
+  }
+  pageTitle.textContent = pageNames[pageName] || pageNames.dashboard;
+}
+
 function setSetupTab(tabName) {
   for (const tab of setupTabs) {
     const active = tab.dataset.setupTab === tabName;
@@ -142,12 +170,18 @@ function renderDreamina() {
     dreaminaState.textContent = "检测中";
     dreaminaState.className = "dreamina-state";
     dreaminaPath.textContent = "-";
+    healthDreaminaText.textContent = "检测中";
+    healthDreaminaText.parentElement.querySelector(".status-dot").classList.remove("running");
     loginDreaminaBtn.disabled = true;
     return;
   }
 
   dreaminaState.textContent = dreaminaStatus.installed ? "已安装" : "未安装";
   dreaminaState.className = `dreamina-state ${dreaminaStatus.installed ? "installed" : "missing"}`;
+  healthDreaminaText.textContent = dreaminaStatus.installed ? "正常" : "未安装";
+  healthDreaminaText.parentElement
+    .querySelector(".status-dot")
+    .classList.toggle("running", dreaminaStatus.installed);
   dreaminaPath.textContent = dreaminaStatus.installed
     ? `${dreaminaStatus.exePath}${dreaminaStatus.version ? ` · ${dreaminaStatus.version}` : ""}`
     : `将安装到 ${dreaminaStatus.installDir}`;
@@ -203,6 +237,10 @@ async function refresh() {
 async function refreshSettings() {
   appSettings = await window.proxyManager.getSettings();
   updreamExePath.value = appSettings.updreamExePath || "";
+  healthUpdreamText.textContent = appSettings.updreamExePath ? "正常" : "未设置";
+  healthUpdreamText.parentElement
+    .querySelector(".status-dot")
+    .classList.toggle("running", Boolean(appSettings.updreamExePath));
   renderKeyGrid();
 }
 
@@ -286,6 +324,20 @@ refreshDreaminaBtn.addEventListener("click", refreshDreamina);
 for (const tab of setupTabs) {
   tab.addEventListener("click", () => setSetupTab(tab.dataset.setupTab));
 }
+
+for (const button of pageButtons) {
+  button.addEventListener("click", () => setPage(button.dataset.pageTarget));
+}
+
+for (const link of pageLinks) {
+  link.addEventListener("click", () => setPage(link.dataset.goPage));
+}
+
+themeToggleBtn.addEventListener("click", () => {
+  const light = document.body.classList.toggle("light-mode");
+  themeToggleBtn.textContent = light ? "☾" : "◐";
+  themeToggleBtn.title = light ? "切换夜间模式" : "切换日间模式";
+});
 
 checkUpdatesBtn.addEventListener("click", async () => {
   checkUpdatesBtn.disabled = true;
