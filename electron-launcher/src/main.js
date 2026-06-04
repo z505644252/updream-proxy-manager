@@ -12,6 +12,11 @@ let sqlReady;
 const UPDATE_OWNER = "z505644252";
 const UPDATE_REPO = "updream-proxy-manager";
 const GITHUB_API_BASE = "https://api.github.com";
+const GITHUB_RAW_BASE = `https://raw.githubusercontent.com/${UPDATE_OWNER}/${UPDATE_REPO}/main`;
+const REMOTE_CONTENT = {
+  contact: `${GITHUB_RAW_BASE}/remote/contact.json`,
+  announcement: `${GITHUB_RAW_BASE}/remote/announcement.json`,
+};
 
 const SERVICES = {
   apimart: {
@@ -176,12 +181,13 @@ function compareVersions(left, right) {
 
 function requestJson(url) {
   return new Promise((resolve, reject) => {
+    const requestUrl = url.includes("?") ? `${url}&t=${Date.now()}` : `${url}?t=${Date.now()}`;
     const request = https.get(
-      url,
+      requestUrl,
       {
         headers: {
           "User-Agent": "Updream-Proxy-Manager",
-          Accept: "application/vnd.github+json",
+          Accept: "application/json, application/vnd.github+json",
         },
         timeout: 15000,
       },
@@ -199,7 +205,7 @@ function requestJson(url) {
           try {
             resolve(JSON.parse(body));
           } catch (error) {
-            reject(new Error(`更新信息解析失败：${error.message}`));
+            reject(new Error(`远程内容解析失败：${error.message}`));
           }
         });
       },
@@ -209,6 +215,12 @@ function requestJson(url) {
     });
     request.on("error", reject);
   });
+}
+
+async function getRemoteContent(name) {
+  const url = REMOTE_CONTENT[name];
+  if (!url) throw new Error(`未知远程内容：${name}`);
+  return requestJson(url);
 }
 
 function findWindowsInstaller(release) {
@@ -818,6 +830,8 @@ ipcMain.handle("updream:configureAndOpen", async (_event, settings) => {
   return { ...configured, opened };
 });
 ipcMain.handle("updates:check", () => checkForUpdates(true));
+ipcMain.handle("content:get", (_event, name) => getRemoteContent(name));
+ipcMain.handle("shell:openExternal", (_event, url) => shell.openExternal(url));
 
 app.whenReady().then(createWindow);
 

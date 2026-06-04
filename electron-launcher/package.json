@@ -13,7 +13,9 @@
   "build": {
     "appId": "com.updream.proxy.manager",
     "productName": "updream管理器",
+    "executableName": "updream-manager",
     "icon": "build/icon.ico",
+    "afterPack": "scripts/afterPack.js",
     "electronDist": "node_modules/electron/dist",
     "compression": "normal",
     "npmRebuild": false,
@@ -55,6 +57,7 @@
     "win": {
       "icon": "build/icon.ico",
       "sign": false,
+      "signAndEditExecutable": false,
       "forceCodeSigning": false,
       "target": [
         "nsis"

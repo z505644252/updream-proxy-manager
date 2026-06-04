@@ -205,71 +205,20 @@
             <section class="contact-page">
               <div class="author-hero">
                 <div class="author-avatar">
-                  <img src="./assets/logo.png" alt="作者头像占位" />
+                  <img id="authorAvatar" src="./assets/logo.png" alt="作者头像" />
                 </div>
-                <h3>联系作者</h3>
-                <p>这里先预留作者介绍文案，后续替换成你发来的正式内容。</p>
+                <h3 id="authorName">联系作者</h3>
+                <p id="authorSubtitle">正在读取 GitHub 在线内容...</p>
               </div>
 
-              <div class="contact-card-grid">
-                <article class="contact-card">
-                  <div class="contact-icon pink">▶</div>
-                  <div>
-                    <h4>Bilibili</h4>
-                    <p>账号 / 链接待填写</p>
-                  </div>
-                  <button class="ghost">前往关注</button>
-                </article>
-                <article class="contact-card">
-                  <div class="contact-icon dark">♪</div>
-                  <div>
-                    <h4>抖音</h4>
-                    <p>账号 / 链接待填写</p>
-                  </div>
-                  <button class="ghost">复制号码</button>
-                </article>
-                <article class="contact-card">
-                  <div class="contact-icon red">❤</div>
-                  <div>
-                    <h4>小红书</h4>
-                    <p>账号 / 链接待填写</p>
-                  </div>
-                  <button class="ghost">复制号码</button>
-                </article>
-                <article class="contact-card">
-                  <div class="contact-icon youtube">▶</div>
-                  <div>
-                    <h4>YouTube</h4>
-                    <p>账号 / 链接待填写</p>
-                  </div>
-                  <button class="ghost">前往订阅</button>
-                </article>
-              </div>
+              <div class="contact-card-grid" id="contactCards"></div>
+              <div class="contact-wide-list" id="contactWideCards"></div>
 
-              <div class="contact-wide-list">
-                <article class="contact-wide-card">
-                  <div class="contact-icon cyan">✉</div>
-                  <div>
-                    <h4>QQ 频道</h4>
-                    <p>频道号 / 入口待填写</p>
-                  </div>
-                  <button class="ghost">复制</button>
-                </article>
-                <article class="contact-wide-card">
-                  <div class="contact-icon purple">▣</div>
-                  <div>
-                    <h4>粉丝资源网站</h4>
-                    <p>AI 工作流 / 提示词 / 素材合集</p>
-                  </div>
-                  <button class="ghost">前往网盘</button>
-                </article>
-              </div>
-
-              <article class="sponsor-card">
+              <article class="sponsor-card" id="sponsorCard">
                 <div class="contact-icon coral">❤</div>
-                <h4>请作者喝杯奶茶</h4>
-                <div class="qr-placeholder">收款码图片待填写</div>
-                <p>支持文案待填写</p>
+                <h4 id="sponsorTitle">请作者喝杯奶茶</h4>
+                <div class="qr-placeholder" id="sponsorQr">收款码图片待填写</div>
+                <p id="sponsorText">支持文案待填写</p>
               </article>
 
               <footer class="copyright">
@@ -279,6 +228,24 @@
           </section>
         </div>
       </main>
+    </div>
+
+    <div class="modal-backdrop hidden" id="announcementModal" role="dialog" aria-modal="true" aria-labelledby="announcementTitle">
+      <section class="announcement-card">
+        <div class="announcement-header">
+          <div>
+            <p class="eyebrow">Announcement</p>
+            <h3 id="announcementTitle">公告</h3>
+          </div>
+          <button class="icon-close" id="announcementCloseBtn" title="关闭">×</button>
+        </div>
+        <div class="announcement-body" id="announcementBody"></div>
+        <div class="announcement-actions">
+          <button class="ghost hidden" id="announcementActionBtn">查看详情</button>
+          <button class="secondary" id="announcementTodayBtn">今日不再显示</button>
+          <button class="primary" id="announcementOkBtn">我知道了</button>
+        </div>
+      </section>
     </div>
 
     <script src="./renderer.js"></script>

@@ -61,6 +61,10 @@ button:disabled {
   opacity: 0.58;
 }
 
+.hidden {
+  display: none !important;
+}
+
 .app-shell {
   display: grid;
   grid-template-columns: 72px 1fr;
@@ -619,14 +623,18 @@ body.light-mode .base-url {
 }
 
 .service-btn {
-  background: rgba(139, 92, 246, 0.14);
-  color: #c4b5fd;
+  background: var(--primary);
+  color: #ffffff;
   font-weight: 900;
 }
 
+.service-btn:hover {
+  background: #7c3aed;
+}
+
 .service-btn.stop {
-  background: rgba(239, 68, 68, 0.14);
-  color: #fca5a5;
+  background: #ef4444;
+  color: #ffffff;
 }
 
 .dreamina-panel {
@@ -1004,6 +1012,13 @@ body.light-mode .logs {
   background: rgba(255, 255, 255, 0.04);
 }
 
+.qr-placeholder img {
+  width: 100%;
+  height: 100%;
+  border-radius: 14px;
+  object-fit: cover;
+}
+
 .copyright {
   margin-top: 22px;
   padding: 18px 20px;
@@ -1013,6 +1028,80 @@ body.light-mode .logs {
   background: var(--panel);
   font-size: 13px;
   line-height: 1.75;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(4, 6, 12, 0.68);
+  backdrop-filter: blur(10px);
+}
+
+.announcement-card {
+  width: min(560px, 100%);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--panel);
+  box-shadow: 0 28px 120px rgba(0, 0, 0, 0.5);
+}
+
+.announcement-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 22px 24px 14px;
+  border-bottom: 1px solid var(--line);
+}
+
+.announcement-header h3 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.icon-close {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: #15171d;
+  color: var(--muted);
+  font-size: 24px;
+  line-height: 1;
+}
+
+.icon-close:hover {
+  background: #22252d;
+  color: var(--text);
+}
+
+.announcement-body {
+  max-height: 360px;
+  overflow: auto;
+  padding: 20px 24px;
+  color: #d7dce6;
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.announcement-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 0 24px 22px;
+}
+
+body.light-mode .announcement-body {
+  color: #344054;
+}
+
+body.light-mode .icon-close {
+  background: #f3f6fb;
 }
 
 @media (max-width: 1180px) {
@@ -1050,6 +1139,7 @@ body.light-mode .logs {
 
   .topbar,
   .topbar-actions,
+  .announcement-actions,
   .panel-header,
   .config-pane-header {
     flex-direction: column;

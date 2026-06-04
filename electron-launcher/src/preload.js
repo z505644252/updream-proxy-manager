@@ -15,6 +15,8 @@ contextBridge.exposeInMainWorld("proxyManager", {
   configureUpdream: (settings) => ipcRenderer.invoke("updream:configure", settings),
   configureAndOpenUpdream: (settings) => ipcRenderer.invoke("updream:configureAndOpen", settings),
   checkUpdates: () => ipcRenderer.invoke("updates:check"),
+  getRemoteContent: (name) => ipcRenderer.invoke("content:get", name),
+  openExternal: (url) => ipcRenderer.invoke("shell:openExternal", url),
   onStatus: (callback) => {
     const listener = (_event, payload) => callback(payload);
     ipcRenderer.on("service-status", listener);

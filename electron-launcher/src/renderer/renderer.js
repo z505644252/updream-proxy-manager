@@ -2,6 +2,7 @@ let services = [];
 let logs = [];
 let dreaminaStatus = null;
 let appSettings = { apiKeys: {}, updreamExePath: "" };
+let announcementActionUrl = "";
 
 const serviceNav = document.querySelector("#serviceNav");
 const serviceGrid = document.querySelector("#serviceGrid");
@@ -29,6 +30,22 @@ const pageLinks = document.querySelectorAll("[data-go-page]");
 const healthServiceText = document.querySelector("#healthServiceText");
 const healthUpdreamText = document.querySelector("#healthUpdreamText");
 const healthDreaminaText = document.querySelector("#healthDreaminaText");
+const authorAvatar = document.querySelector("#authorAvatar");
+const authorName = document.querySelector("#authorName");
+const authorSubtitle = document.querySelector("#authorSubtitle");
+const contactCards = document.querySelector("#contactCards");
+const contactWideCards = document.querySelector("#contactWideCards");
+const sponsorCard = document.querySelector("#sponsorCard");
+const sponsorTitle = document.querySelector("#sponsorTitle");
+const sponsorQr = document.querySelector("#sponsorQr");
+const sponsorText = document.querySelector("#sponsorText");
+const announcementModal = document.querySelector("#announcementModal");
+const announcementTitle = document.querySelector("#announcementTitle");
+const announcementBody = document.querySelector("#announcementBody");
+const announcementCloseBtn = document.querySelector("#announcementCloseBtn");
+const announcementTodayBtn = document.querySelector("#announcementTodayBtn");
+const announcementOkBtn = document.querySelector("#announcementOkBtn");
+const announcementActionBtn = document.querySelector("#announcementActionBtn");
 const setupTabs = document.querySelectorAll(".setup-tab");
 const setupPanes = {
   keys: document.querySelector("#keysPane"),
@@ -43,12 +60,158 @@ const pageNames = {
   contact: "联系作者",
 };
 
+const defaultContactContent = {
+  author: {
+    name: "联系作者",
+    subtitle: "这里的内容会从 GitHub 在线读取，后续修改 JSON 后用户重新打开软件即可看到最新内容。",
+    avatarUrl: "./assets/logo.png",
+  },
+  cards: [
+    { title: "Bilibili", text: "账号 / 链接待填写", icon: "▶", color: "pink", actionText: "前往关注", url: "" },
+    { title: "抖音", text: "账号 / 链接待填写", icon: "♪", color: "dark", actionText: "复制号码", copyText: "" },
+    { title: "小红书", text: "账号 / 链接待填写", icon: "❤", color: "red", actionText: "复制号码", copyText: "" },
+    { title: "YouTube", text: "账号 / 链接待填写", icon: "▶", color: "youtube", actionText: "前往订阅", url: "" },
+  ],
+  wideCards: [
+    { title: "QQ 频道", text: "频道号 / 入口待填写", icon: "✉", color: "cyan", actionText: "复制", copyText: "" },
+    { title: "粉丝资源网站", text: "AI 工作流 / 提示词 / 素材合集", icon: "▣", color: "purple", actionText: "前往网盘", url: "" },
+  ],
+  sponsor: {
+    title: "请作者喝杯奶茶",
+    text: "支持文案待填写",
+    qrImageUrl: "",
+    enabled: true,
+  },
+};
+
 function escapeHtml(value) {
   return String(value)
     .replaceAll("&", "&amp;")
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;");
+}
+
+function todayKey() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function linesToHtml(value) {
+  return escapeHtml(value || "").replace(/\r?\n/g, "<br />");
+}
+
+async function runContactAction(item) {
+  if (!item) return;
+  if (item.url) {
+    await window.proxyManager.openExternal(item.url);
+    return;
+  }
+  if (item.copyText) {
+    await navigator.clipboard.writeText(item.copyText);
+    pushLog("contact", "info", `${item.title || "内容"} 已复制。`);
+  }
+}
+
+function contactButtonHtml(item, className = "ghost") {
+  if (!item.url && !item.copyText) return "";
+  return `<button class="${className}" data-contact-action="${escapeHtml(item.id)}">${escapeHtml(item.actionText || "打开")}</button>`;
+}
+
+function renderContactContent(content) {
+  const data = {
+    ...defaultContactContent,
+    ...content,
+    author: { ...defaultContactContent.author, ...(content?.author || {}) },
+    sponsor: { ...defaultContactContent.sponsor, ...(content?.sponsor || {}) },
+  };
+  const contactItems = [...(data.cards || []), ...(data.wideCards || [])].map((item, index) => ({
+    ...item,
+    id: item.id || `contact-${index}`,
+  }));
+  const itemById = new Map(contactItems.map((item) => [item.id, item]));
+
+  authorName.textContent = data.author.name || "联系作者";
+  authorSubtitle.textContent = data.author.subtitle || "";
+  authorAvatar.src = data.author.avatarUrl || "./assets/logo.png";
+
+  contactCards.innerHTML = contactItems
+    .slice(0, data.cards?.length || 0)
+    .map(
+      (item) => `
+        <article class="contact-card">
+          <div class="contact-icon ${escapeHtml(item.color || "purple")}">${escapeHtml(item.icon || "•")}</div>
+          <div>
+            <h4>${escapeHtml(item.title || "")}</h4>
+            <p>${escapeHtml(item.text || "")}</p>
+          </div>
+          ${contactButtonHtml(item)}
+        </article>
+      `,
+    )
+    .join("");
+
+  contactWideCards.innerHTML = contactItems
+    .slice(data.cards?.length || 0)
+    .map(
+      (item) => `
+        <article class="contact-wide-card">
+          <div class="contact-icon ${escapeHtml(item.color || "purple")}">${escapeHtml(item.icon || "•")}</div>
+          <div>
+            <h4>${escapeHtml(item.title || "")}</h4>
+            <p>${escapeHtml(item.text || "")}</p>
+          </div>
+          ${contactButtonHtml(item)}
+        </article>
+      `,
+    )
+    .join("");
+
+  sponsorCard.classList.toggle("hidden", data.sponsor.enabled === false);
+  sponsorTitle.textContent = data.sponsor.title || "";
+  sponsorText.textContent = data.sponsor.text || "";
+  sponsorQr.innerHTML = data.sponsor.qrImageUrl
+    ? `<img src="${escapeHtml(data.sponsor.qrImageUrl)}" alt="${escapeHtml(data.sponsor.title || "收款码")}" />`
+    : "收款码图片待填写";
+
+  for (const button of document.querySelectorAll("[data-contact-action]")) {
+    button.addEventListener("click", () => runContactAction(itemById.get(button.dataset.contactAction)));
+  }
+}
+
+function hideAnnouncement() {
+  announcementModal.classList.add("hidden");
+}
+
+function showAnnouncement(content) {
+  if (!content?.enabled) return;
+  const id = String(content.id || "default");
+  const hiddenDate = localStorage.getItem(`announcementHiddenDate:${id}`);
+  if (hiddenDate === todayKey()) return;
+
+  announcementTitle.textContent = content.title || "公告";
+  announcementBody.innerHTML = linesToHtml(content.body || "");
+  announcementActionUrl = content.actionUrl || "";
+  announcementActionBtn.textContent = content.actionText || "查看详情";
+  announcementActionBtn.classList.toggle("hidden", !announcementActionUrl);
+  announcementTodayBtn.dataset.announcementId = id;
+  announcementModal.classList.remove("hidden");
+}
+
+async function refreshRemoteContent() {
+  renderContactContent(defaultContactContent);
+  try {
+    const contact = await window.proxyManager.getRemoteContent("contact");
+    renderContactContent(contact);
+  } catch (error) {
+    pushLog("contact", "warn", `联系作者在线内容读取失败：${error.message || String(error)}`);
+  }
+
+  try {
+    const announcement = await window.proxyManager.getRemoteContent("announcement");
+    showAnnouncement(announcement);
+  } catch (error) {
+    pushLog("announcement", "warn", `公告在线内容读取失败：${error.message || String(error)}`);
+  }
 }
 
 function configText(service) {
@@ -341,6 +504,17 @@ themeToggleBtn.addEventListener("click", () => {
   themeToggleBtn.title = light ? "切换夜间模式" : "切换日间模式";
 });
 
+announcementCloseBtn.addEventListener("click", hideAnnouncement);
+announcementOkBtn.addEventListener("click", hideAnnouncement);
+announcementTodayBtn.addEventListener("click", () => {
+  const id = announcementTodayBtn.dataset.announcementId || "default";
+  localStorage.setItem(`announcementHiddenDate:${id}`, todayKey());
+  hideAnnouncement();
+});
+announcementActionBtn.addEventListener("click", async () => {
+  if (announcementActionUrl) await window.proxyManager.openExternal(announcementActionUrl);
+});
+
 checkUpdatesBtn.addEventListener("click", async () => {
   checkUpdatesBtn.disabled = true;
   try {
@@ -416,3 +590,4 @@ refresh();
 refreshDreamina();
 renderLogs();
 renderDreamina();
+refreshRemoteContent();

@@ -1,0 +1,71 @@
+{
+  "author": {
+    "name": "联系作者",
+    "subtitle": "这里填写作者介绍或一句话说明。",
+    "avatarUrl": ""
+  },
+  "cards": [
+    {
+      "id": "bilibili",
+      "title": "Bilibili",
+      "text": "账号待填写",
+      "icon": "▶",
+      "color": "pink",
+      "actionText": "前往关注",
+      "url": ""
+    },
+    {
+      "id": "douyin",
+      "title": "抖音",
+      "text": "账号待填写",
+      "icon": "♪",
+      "color": "dark",
+      "actionText": "复制号码",
+      "copyText": ""
+    },
+    {
+      "id": "xiaohongshu",
+      "title": "小红书",
+      "text": "账号待填写",
+      "icon": "❤",
+      "color": "red",
+      "actionText": "复制号码",
+      "copyText": ""
+    },
+    {
+      "id": "youtube",
+      "title": "YouTube",
+      "text": "账号待填写",
+      "icon": "▶",
+      "color": "youtube",
+      "actionText": "前往订阅",
+      "url": ""
+    }
+  ],
+  "wideCards": [
+    {
+      "id": "qq",
+      "title": "QQ 频道",
+      "text": "频道号待填写",
+      "icon": "✉",
+      "color": "cyan",
+      "actionText": "复制",
+      "copyText": ""
+    },
+    {
+      "id": "resources",
+      "title": "粉丝资源网站",
+      "text": "AI 工作流 / 提示词 / 素材合集",
+      "icon": "▣",
+      "color": "purple",
+      "actionText": "前往网盘",
+      "url": ""
+    }
+  ],
+  "sponsor": {
+    "enabled": true,
+    "title": "请作者喝杯奶茶",
+    "text": "支持文案待填写",
+    "qrImageUrl": ""
+  }
+}

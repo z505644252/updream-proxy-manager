@@ -1,0 +1,8 @@
+{
+  "enabled": true,
+  "id": "welcome-2026-06-05",
+  "title": "公告",
+  "body": "这里填写在线公告内容。\\n修改 GitHub 上的 remote/announcement.json 后，用户下次打开软件会看到最新公告。",
+  "actionText": "查看详情",
+  "actionUrl": ""
+}
