@@ -13,6 +13,7 @@ Updream Proxy Manager 是一个 Windows 桌面管理器，用来启动本地 Upd
 - 内置即梦/Jimeng CLI 安装和登录辅助。
 - 端口冲突处理，可选择自动换端口或结束占用进程。
 - 可一键打开内置 Updream 程序。
+- 支持从 GitHub Releases 检查新版本并打开下载链接。
 
 ## 支持的服务
 
@@ -88,6 +89,7 @@ Updream Proxy Manager is a Windows desktop manager for local Updream-compatible 
 - Built-in Dreamina/Jimeng CLI install and login helpers.
 - Port conflict handling with options to switch ports or stop the occupying process.
 - Optional bundled Updream executable launch.
+- GitHub Releases update check with direct download/release links.
 
 ## Supported Local Services
 
