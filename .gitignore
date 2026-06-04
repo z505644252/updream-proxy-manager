@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*.spec
+
+# Local logs and test output
+*.log
+*.out
+*.err
+
+# Build output
+build/
+dist/
+electron-launcher/dist/
+electron-launcher/node_modules/
+electron-launcher/vendor/dreamina/dreamina.exe
+
+# Bundled third-party/runtime apps
+3/
+
+# Local app data, databases, and secrets
+*.db
+*.sqlite
+*.sqlite3
+settings.json
+.env
+.env.*
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

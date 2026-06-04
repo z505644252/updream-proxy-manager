@@ -1,0 +1,77 @@
+{
+  "name": "updream-proxy-manager",
+  "version": "1.0.1",
+  "description": "Desktop manager for Updream local proxy services.",
+  "main": "src/main.js",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --win nsis",
+    "build:fast": "electron-builder --win nsis -c.compression=store",
+    "build:portable": "electron-builder --win portable"
+  },
+  "build": {
+    "appId": "com.updream.proxy.manager",
+    "productName": "Updream Proxy Manager",
+    "electronDist": "node_modules/electron/dist",
+    "compression": "normal",
+    "npmRebuild": false,
+    "buildDependenciesFromSource": false,
+    "asar": true,
+    "files": [
+      "src/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "../dist",
+        "to": "proxy-bin",
+        "filter": [
+          "apimart_sync_proxy_console.exe",
+          "runninghub_sync_proxy_console.exe",
+          "agnes_sync_proxy.exe",
+          "agnes_video_proxy.exe"
+        ]
+      },
+      {
+        "from": "vendor/dreamina",
+        "to": "dreamina-cli",
+        "filter": [
+          "dreamina.exe",
+          "SKILL.md",
+          "version.json"
+        ]
+      },
+      {
+        "from": "../3/updream",
+        "to": "updream-app",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
+    "win": {
+      "signAndEditExecutable": false,
+      "forceCodeSigning": false,
+      "target": [
+        "nsis"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "differentialPackage": false,
+      "shortcutName": "Updream Proxy Manager",
+      "artifactName": "Updream-Proxy-Manager-Setup-${version}.${ext}"
+    }
+  },
+  "devDependencies": {
+    "electron": "^33.4.11",
+    "electron-builder": "^25.1.8"
+  },
+  "dependencies": {
+    "sql.js": "^1.14.1"
+  }
+}
