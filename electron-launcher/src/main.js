@@ -199,7 +199,9 @@ function requestJson(url) {
         });
         response.on("end", () => {
           if (response.statusCode < 200 || response.statusCode >= 300) {
-            reject(new Error(`GitHub 返回状态 ${response.statusCode}`));
+            const error = new Error(`GitHub 返回状态 ${response.statusCode}`);
+            error.statusCode = response.statusCode;
+            reject(error);
             return;
           }
           try {
@@ -220,7 +222,12 @@ function requestJson(url) {
 async function getRemoteContent(name) {
   const url = REMOTE_CONTENT[name];
   if (!url) throw new Error(`未知远程内容：${name}`);
-  return requestJson(url);
+  try {
+    return await requestJson(url);
+  } catch (error) {
+    if (error.statusCode === 404) return null;
+    throw error;
+  }
 }
 
 function findWindowsInstaller(release) {

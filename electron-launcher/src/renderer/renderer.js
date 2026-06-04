@@ -84,6 +84,15 @@ const defaultContactContent = {
   },
 };
 
+const defaultAnnouncementContent = {
+  enabled: true,
+  id: "local-welcome-2026-06-05",
+  title: "公告",
+  body: "公告功能已启用。\n后续把 remote/announcement.json 同步到 GitHub 后，这里会自动显示线上公告内容，不需要重新打包。",
+  actionText: "",
+  actionUrl: "",
+};
+
 function escapeHtml(value) {
   return String(value)
     .replaceAll("&", "&amp;")
@@ -201,16 +210,17 @@ async function refreshRemoteContent() {
   renderContactContent(defaultContactContent);
   try {
     const contact = await window.proxyManager.getRemoteContent("contact");
-    renderContactContent(contact);
+    if (contact) renderContactContent(contact);
   } catch (error) {
     pushLog("contact", "warn", `联系作者在线内容读取失败：${error.message || String(error)}`);
   }
 
   try {
     const announcement = await window.proxyManager.getRemoteContent("announcement");
-    showAnnouncement(announcement);
+    showAnnouncement(announcement || defaultAnnouncementContent);
   } catch (error) {
     pushLog("announcement", "warn", `公告在线内容读取失败：${error.message || String(error)}`);
+    showAnnouncement(defaultAnnouncementContent);
   }
 }
 
