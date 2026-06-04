@@ -20,6 +20,7 @@ const pickUpdreamBtn = document.querySelector("#pickUpdreamBtn");
 const saveSettingsBtn = document.querySelector("#saveSettingsBtn");
 const configureOnlyBtn = document.querySelector("#configureOnlyBtn");
 const startConfigureOpenBtn = document.querySelector("#startConfigureOpenBtn");
+const checkUpdatesBtn = document.querySelector("#checkUpdatesBtn");
 
 function escapeHtml(value) {
   return String(value)
@@ -265,6 +266,22 @@ loginDreaminaBtn.addEventListener("click", async () => {
 });
 
 refreshDreaminaBtn.addEventListener("click", refreshDreamina);
+
+checkUpdatesBtn.addEventListener("click", async () => {
+  checkUpdatesBtn.disabled = true;
+  try {
+    const result = await window.proxyManager.checkUpdates();
+    if (result.hasUpdate) {
+      pushLog("update", "info", `发现新版本 ${result.latestVersion}，当前版本 ${result.currentVersion}。`);
+    } else {
+      pushLog("update", "info", `当前已是最新版本：${result.currentVersion}。`);
+    }
+  } catch (error) {
+    pushLog("update", "error", error.message || String(error));
+  } finally {
+    checkUpdatesBtn.disabled = false;
+  }
+});
 
 pickUpdreamBtn.addEventListener("click", async () => {
   appSettings = await window.proxyManager.pickUpdreamExe();
