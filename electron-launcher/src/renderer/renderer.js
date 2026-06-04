@@ -40,6 +40,7 @@ const pageNames = {
   services: "本地代理服务",
   logs: "运行日志",
   settings: "系统设置",
+  contact: "联系作者",
 };
 
 function escapeHtml(value) {
@@ -90,8 +91,9 @@ function render() {
               <h3>${escapeHtml(item.name)}</h3>
               <p>${escapeHtml(item.description)}</p>
             </div>
-            <span class="badge ${item.running ? "running" : ""}">
-              ${item.running ? "运行中" : "未启动"}
+            <span class="status-label ${item.running ? "normal" : "abnormal"}">
+              <i class="status-dot ${item.running ? "running" : "error"}"></i>
+              ${item.running ? "正常" : "不正常"}
             </span>
           </div>
 

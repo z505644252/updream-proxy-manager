@@ -137,7 +137,10 @@ body.light-mode .rail-item.active {
   color: #6d3fe5;
 }
 
-.rail-bottom {
+.rail-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
   margin-top: auto;
 }
 
@@ -409,7 +412,7 @@ body.light-mode .metric-card.purple {
 }
 
 .status-pill,
-.badge,
+.status-label,
 .dreamina-state {
   display: inline-flex;
   align-items: center;
@@ -423,7 +426,7 @@ body.light-mode .metric-card.purple {
 }
 
 body.light-mode .status-pill,
-body.light-mode .badge,
+body.light-mode .status-label,
 body.light-mode .dreamina-state {
   background: #eef2f7;
 }
@@ -460,7 +463,6 @@ body.light-mode .dreamina-state {
 }
 
 .status-pill::before,
-.badge.running::before,
 .dreamina-state.installed::before {
   content: "";
   width: 6px;
@@ -517,6 +519,11 @@ body.light-mode .config-card {
   box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.14);
 }
 
+.status-dot.error {
+  background: var(--danger);
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.14);
+}
+
 .service-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(280px, 1fr));
@@ -552,9 +559,14 @@ body.light-mode .config-card {
   line-height: 1.5;
 }
 
-.badge.running {
+.status-label.normal {
   color: #4ade80;
   background: rgba(16, 185, 129, 0.12);
+}
+
+.status-label.abnormal {
+  color: #fca5a5;
+  background: rgba(239, 68, 68, 0.12);
 }
 
 .service-controls {
@@ -851,10 +863,156 @@ body.light-mode .logs {
   color: #f87171;
 }
 
+.contact-page {
+  max-width: 760px;
+  margin: 0 auto;
+  padding-bottom: 18px;
+}
+
+.author-hero {
+  display: grid;
+  justify-items: center;
+  padding: 4px 0 24px;
+  text-align: center;
+}
+
+.author-avatar {
+  width: 86px;
+  height: 86px;
+  overflow: hidden;
+  border: 3px solid #343844;
+  border-radius: 50%;
+  background: #20232b;
+}
+
+.author-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.author-hero h3 {
+  margin: 10px 0 6px;
+  font-size: 28px;
+}
+
+.author-hero p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.contact-card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.contact-card,
+.contact-wide-card,
+.sponsor-card {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--panel);
+  box-shadow: var(--shadow);
+}
+
+.contact-card {
+  display: grid;
+  grid-template-columns: 36px 1fr;
+  gap: 12px;
+  min-height: 128px;
+  padding: 22px;
+}
+
+.contact-card button {
+  grid-column: 2;
+  justify-self: end;
+}
+
+.contact-wide-list {
+  display: grid;
+  gap: 14px;
+  margin-top: 16px;
+}
+
+.contact-wide-card {
+  display: grid;
+  grid-template-columns: 36px 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 18px 22px;
+}
+
+.contact-icon {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  color: #fff;
+  font-weight: 900;
+}
+
+.contact-icon.pink { background: #fb7185; }
+.contact-icon.dark { background: #050507; }
+.contact-icon.red { background: #f43f5e; }
+.contact-icon.youtube { background: #ff0000; }
+.contact-icon.cyan { background: #22d3ee; }
+.contact-icon.purple { background: #8b5cf6; }
+.contact-icon.coral { background: linear-gradient(135deg, #fb7185, #fb923c); }
+
+.contact-card h4,
+.contact-wide-card h4,
+.sponsor-card h4 {
+  margin: 0 0 8px;
+  font-size: 17px;
+}
+
+.contact-card p,
+.contact-wide-card p,
+.sponsor-card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.sponsor-card {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  margin-top: 28px;
+  padding: 24px;
+  text-align: center;
+  background: linear-gradient(135deg, rgba(251, 113, 133, 0.14), rgba(139, 92, 246, 0.12)), var(--panel);
+}
+
+.qr-placeholder {
+  display: grid;
+  place-items: center;
+  width: 220px;
+  height: 220px;
+  border: 2px dashed var(--line);
+  border-radius: 16px;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.copyright {
+  margin-top: 22px;
+  padding: 18px 20px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  color: var(--muted);
+  background: var(--panel);
+  font-size: 13px;
+  line-height: 1.75;
+}
+
 @media (max-width: 1180px) {
   .dashboard-cards,
   .dashboard-split,
   .settings-grid,
+  .contact-card-grid,
   .service-grid,
   .config-list,
   .config-list.compact,
@@ -898,6 +1056,7 @@ body.light-mode .logs {
   }
 
   .service-controls,
+  .contact-wide-card,
   .updream-path-row {
     grid-template-columns: 1fr;
   }

@@ -12,7 +12,8 @@
   },
   "build": {
     "appId": "com.updream.proxy.manager",
-    "productName": "Updream Proxy Manager",
+    "productName": "updream管理器",
+    "icon": "build/icon.ico",
     "electronDist": "node_modules/electron/dist",
     "compression": "normal",
     "npmRebuild": false,
@@ -65,8 +66,10 @@
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
       "differentialPackage": false,
-      "shortcutName": "Updream Proxy Manager",
-      "artifactName": "Updream-Proxy-Manager-Setup-${version}.${ext}"
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico",
+      "shortcutName": "updream管理器",
+      "artifactName": "updream-manager-setup-${version}.${ext}"
     }
   },
   "devDependencies": {

@@ -3,20 +3,23 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Updream Proxy Manager</title>
+    <title>updream管理器</title>
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
     <div class="app-shell">
       <aside class="icon-rail" aria-label="主导航">
-        <div class="avatar"><img src="./assets/logo.png" alt="Updream Proxy Manager" /></div>
+        <div class="avatar"><img src="./assets/logo.png" alt="updream管理器" /></div>
         <nav class="rail-nav">
           <button class="rail-item active" data-page-target="dashboard" title="仪表盘">▦</button>
           <button class="rail-item" data-page-target="services" title="服务">◫</button>
           <button class="rail-item" data-page-target="logs" title="日志">☰</button>
           <button class="rail-item" data-page-target="settings" title="设置">⚙</button>
         </nav>
-        <button class="rail-item rail-bottom" id="themeToggleBtn" title="切换日间/夜间模式">◐</button>
+        <div class="rail-footer">
+          <button class="rail-item" data-page-target="contact" title="联系作者">♡</button>
+          <button class="rail-item" id="themeToggleBtn" title="切换日间/夜间模式">◐</button>
+        </div>
       </aside>
 
       <main class="app-main">
@@ -195,6 +198,83 @@
                   <button class="ghost" id="refreshDreaminaBtn">重新检测</button>
                 </div>
               </section>
+            </section>
+          </section>
+
+          <section class="page-view" data-page="contact">
+            <section class="contact-page">
+              <div class="author-hero">
+                <div class="author-avatar">
+                  <img src="./assets/logo.png" alt="作者头像占位" />
+                </div>
+                <h3>联系作者</h3>
+                <p>这里先预留作者介绍文案，后续替换成你发来的正式内容。</p>
+              </div>
+
+              <div class="contact-card-grid">
+                <article class="contact-card">
+                  <div class="contact-icon pink">▶</div>
+                  <div>
+                    <h4>Bilibili</h4>
+                    <p>账号 / 链接待填写</p>
+                  </div>
+                  <button class="ghost">前往关注</button>
+                </article>
+                <article class="contact-card">
+                  <div class="contact-icon dark">♪</div>
+                  <div>
+                    <h4>抖音</h4>
+                    <p>账号 / 链接待填写</p>
+                  </div>
+                  <button class="ghost">复制号码</button>
+                </article>
+                <article class="contact-card">
+                  <div class="contact-icon red">❤</div>
+                  <div>
+                    <h4>小红书</h4>
+                    <p>账号 / 链接待填写</p>
+                  </div>
+                  <button class="ghost">复制号码</button>
+                </article>
+                <article class="contact-card">
+                  <div class="contact-icon youtube">▶</div>
+                  <div>
+                    <h4>YouTube</h4>
+                    <p>账号 / 链接待填写</p>
+                  </div>
+                  <button class="ghost">前往订阅</button>
+                </article>
+              </div>
+
+              <div class="contact-wide-list">
+                <article class="contact-wide-card">
+                  <div class="contact-icon cyan">✉</div>
+                  <div>
+                    <h4>QQ 频道</h4>
+                    <p>频道号 / 入口待填写</p>
+                  </div>
+                  <button class="ghost">复制</button>
+                </article>
+                <article class="contact-wide-card">
+                  <div class="contact-icon purple">▣</div>
+                  <div>
+                    <h4>粉丝资源网站</h4>
+                    <p>AI 工作流 / 提示词 / 素材合集</p>
+                  </div>
+                  <button class="ghost">前往网盘</button>
+                </article>
+              </div>
+
+              <article class="sponsor-card">
+                <div class="contact-icon coral">❤</div>
+                <h4>请作者喝杯奶茶</h4>
+                <div class="qr-placeholder">收款码图片待填写</div>
+                <p>支持文案待填写</p>
+              </article>
+
+              <footer class="copyright">
+                本软件由UP主独立开发，版权归作者所有。未经作者书面授权，禁止倒卖、二次销售、破解、修改后分发或任何商业牟利。作者保留一切权利，并保留依法追究侵权责任的权利。
+              </footer>
             </section>
           </section>
         </div>

@@ -127,7 +127,7 @@ function createWindow() {
     minWidth: 980,
     minHeight: 680,
     backgroundColor: "#f5f7fb",
-    title: "Updream Proxy Manager",
+    title: "updream管理器",
     icon: getAppIconPath(),
     autoHideMenuBar: true,
     webPreferences: {
