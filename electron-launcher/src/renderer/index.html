@@ -83,29 +83,36 @@
             <button class="primary" id="startConfigureOpenBtn">一键启动并打开 Updream</button>
           </div>
 
-          <div class="updream-path-row">
-            <label for="updreamExePath">Updream 程序</label>
-            <input id="updreamExePath" class="path-field" type="text" />
-            <button class="ghost" id="pickUpdreamBtn">选择</button>
+          <div class="setup-tabs" role="tablist" aria-label="自动配置页面">
+            <button class="setup-tab active" data-setup-tab="keys" role="tab" aria-selected="true">密钥配置</button>
+            <button class="setup-tab" data-setup-tab="configs" role="tab" aria-selected="false">配置清单</button>
           </div>
 
-          <div class="key-grid" id="keyGrid"></div>
-
-          <div class="setup-actions">
-            <button class="ghost" id="saveSettingsBtn">保存密钥</button>
-            <button class="ghost" id="configureOnlyBtn">仅写入 Updream 配置</button>
-          </div>
-        </section>
-
-        <section class="details-panel">
-          <div class="panel-header">
-            <div>
-              <p class="eyebrow">Updream settings</p>
-              <h3>配置清单</h3>
+          <div class="setup-pane active" id="keysPane">
+            <div class="updream-path-row">
+              <label for="updreamExePath">Updream 程序</label>
+              <input id="updreamExePath" class="path-field" type="text" />
+              <button class="ghost" id="pickUpdreamBtn">选择</button>
             </div>
-            <button class="ghost" id="copyAllBtn">复制全部配置</button>
+
+            <div class="key-grid" id="keyGrid"></div>
+
+            <div class="setup-actions">
+              <button class="ghost" id="saveSettingsBtn">保存密钥</button>
+              <button class="ghost" id="configureOnlyBtn">仅写入 Updream 配置</button>
+            </div>
           </div>
-          <div id="configList" class="config-list"></div>
+
+          <div class="setup-pane" id="configsPane">
+            <div class="config-pane-header">
+              <div>
+                <h4>写入 Updream 的配置</h4>
+                <p>这里用于核对 Provider、Base URL、模型和 Endpoint ID，日常使用无需手动复制。</p>
+              </div>
+              <button class="ghost" id="copyAllBtn">复制全部配置</button>
+            </div>
+            <div id="configList" class="config-list compact"></div>
+          </div>
         </section>
 
         <section class="details-panel logs-panel">

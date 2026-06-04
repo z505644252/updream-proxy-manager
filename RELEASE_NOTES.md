@@ -1,5 +1,19 @@
 # Release Notes / 更新日志
 
+## v1.0.3
+
+### 中文
+
+- 重新整理主界面布局。
+- 将配置清单从独立大面板收起，合并到“密钥与 Updream 自动配置”二级页签中。
+- 默认展示密钥配置，让一键启动和自动配置流程更聚焦。
+
+### English
+
+- Refined the main application layout.
+- Moved the configuration list from a standalone panel into a secondary tab inside the key/auto setup panel.
+- Shows key configuration by default to keep the one-click setup flow focused.
+
 ## v1.0.2
 
 ### 中文

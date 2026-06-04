@@ -408,6 +408,40 @@ button:disabled {
   background: #ffffff;
 }
 
+.setup-tabs {
+  display: inline-flex;
+  gap: 4px;
+  margin-bottom: 16px;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f8fafc;
+}
+
+.setup-tab {
+  min-width: 96px;
+  height: 34px;
+  padding: 0 12px;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.setup-tab.active {
+  background: #ffffff;
+  color: var(--primary-2);
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.08);
+}
+
+.setup-pane {
+  display: none;
+}
+
+.setup-pane.active {
+  display: block;
+}
+
 .updream-path-row {
   display: grid;
   grid-template-columns: 110px 1fr 96px;
@@ -468,6 +502,26 @@ button:disabled {
   margin-top: 14px;
 }
 
+.config-pane-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.config-pane-header h4 {
+  margin: 0 0 6px;
+  font-size: 15px;
+}
+
+.config-pane-header p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
 .panel-header {
   display: flex;
   justify-content: space-between;
@@ -504,6 +558,10 @@ button:disabled {
   display: grid;
   grid-template-columns: repeat(2, minmax(280px, 1fr));
   gap: 12px;
+}
+
+.config-list.compact {
+  grid-template-columns: repeat(2, minmax(260px, 1fr));
 }
 
 .config-card {
@@ -583,6 +641,10 @@ button:disabled {
 
   .updream-path-row {
     grid-template-columns: 1fr;
+  }
+
+  .config-pane-header {
+    flex-direction: column;
   }
 
   .topbar,

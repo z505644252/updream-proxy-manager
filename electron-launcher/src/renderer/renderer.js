@@ -21,6 +21,11 @@ const saveSettingsBtn = document.querySelector("#saveSettingsBtn");
 const configureOnlyBtn = document.querySelector("#configureOnlyBtn");
 const startConfigureOpenBtn = document.querySelector("#startConfigureOpenBtn");
 const checkUpdatesBtn = document.querySelector("#checkUpdatesBtn");
+const setupTabs = document.querySelectorAll(".setup-tab");
+const setupPanes = {
+  keys: document.querySelector("#keysPane"),
+  configs: document.querySelector("#configsPane"),
+};
 
 function escapeHtml(value) {
   return String(value)
@@ -101,6 +106,17 @@ function render() {
       `,
     )
     .join("");
+}
+
+function setSetupTab(tabName) {
+  for (const tab of setupTabs) {
+    const active = tab.dataset.setupTab === tabName;
+    tab.classList.toggle("active", active);
+    tab.setAttribute("aria-selected", String(active));
+  }
+  for (const [name, pane] of Object.entries(setupPanes)) {
+    pane?.classList.toggle("active", name === tabName);
+  }
 }
 
 function renderLogs() {
@@ -266,6 +282,10 @@ loginDreaminaBtn.addEventListener("click", async () => {
 });
 
 refreshDreaminaBtn.addEventListener("click", refreshDreamina);
+
+for (const tab of setupTabs) {
+  tab.addEventListener("click", () => setSetupTab(tab.dataset.setupTab));
+}
 
 checkUpdatesBtn.addEventListener("click", async () => {
   checkUpdatesBtn.disabled = true;
