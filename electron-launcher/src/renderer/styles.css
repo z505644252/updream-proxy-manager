@@ -217,6 +217,12 @@ button:disabled {
   text-align: right;
 }
 
+.topbar-side {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .service-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(280px, 1fr));
@@ -577,5 +583,15 @@ button:disabled {
 
   .updream-path-row {
     grid-template-columns: 1fr;
+  }
+
+  .topbar,
+  .topbar-side {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .topbar-note {
+    text-align: left;
   }
 }
