@@ -1,12 +1,17 @@
 const { app, BrowserWindow, ipcMain, dialog, shell } = require("electron");
 const path = require("node:path");
 const fs = require("node:fs");
+const https = require("node:https");
 const { spawn, execFile } = require("node:child_process");
 const { promisify } = require("node:util");
 const initSqlJs = require("sql.js");
 
 const execFileAsync = promisify(execFile);
 let sqlReady;
+
+const UPDATE_OWNER = "z505644252";
+const UPDATE_REPO = "updream-proxy-manager";
+const GITHUB_API_BASE = "https://api.github.com";
 
 const SERVICES = {
   apimart: {
@@ -141,6 +146,119 @@ function log(serviceId, message, level = "info") {
     level,
     time: new Date().toLocaleTimeString(),
   });
+}
+
+function parseVersion(value) {
+  return String(value || "")
+    .trim()
+    .replace(/^v/i, "")
+    .split(".")
+    .map((part) => Number.parseInt(part.replace(/\D.*/, ""), 10) || 0);
+}
+
+function compareVersions(left, right) {
+  const a = parseVersion(left);
+  const b = parseVersion(right);
+  const length = Math.max(a.length, b.length, 3);
+  for (let index = 0; index < length; index += 1) {
+    const diff = (a[index] || 0) - (b[index] || 0);
+    if (diff !== 0) return diff > 0 ? 1 : -1;
+  }
+  return 0;
+}
+
+function requestJson(url) {
+  return new Promise((resolve, reject) => {
+    const request = https.get(
+      url,
+      {
+        headers: {
+          "User-Agent": "Updream-Proxy-Manager",
+          Accept: "application/vnd.github+json",
+        },
+        timeout: 15000,
+      },
+      (response) => {
+        let body = "";
+        response.setEncoding("utf8");
+        response.on("data", (chunk) => {
+          body += chunk;
+        });
+        response.on("end", () => {
+          if (response.statusCode < 200 || response.statusCode >= 300) {
+            reject(new Error(`GitHub 返回状态 ${response.statusCode}`));
+            return;
+          }
+          try {
+            resolve(JSON.parse(body));
+          } catch (error) {
+            reject(new Error(`更新信息解析失败：${error.message}`));
+          }
+        });
+      },
+    );
+    request.on("timeout", () => {
+      request.destroy(new Error("检查更新超时"));
+    });
+    request.on("error", reject);
+  });
+}
+
+function findWindowsInstaller(release) {
+  const assets = Array.isArray(release.assets) ? release.assets : [];
+  return (
+    assets.find((asset) => /setup.*\.exe$/i.test(asset.name || "")) ||
+    assets.find((asset) => /\.exe$/i.test(asset.name || ""))
+  );
+}
+
+async function checkForUpdates(showDialog = true) {
+  const currentVersion = app.getVersion();
+  const release = await requestJson(`${GITHUB_API_BASE}/repos/${UPDATE_OWNER}/${UPDATE_REPO}/releases/latest`);
+  const latestVersion = String(release.tag_name || release.name || "").replace(/^v/i, "");
+  const installer = findWindowsInstaller(release);
+  const hasUpdate = compareVersions(latestVersion, currentVersion) > 0;
+  const result = {
+    currentVersion,
+    latestVersion,
+    hasUpdate,
+    releaseName: release.name || release.tag_name,
+    releaseUrl: release.html_url,
+    downloadUrl: installer?.browser_download_url || release.html_url,
+    assetName: installer?.name || "",
+  };
+
+  if (!showDialog) return result;
+
+  if (!hasUpdate) {
+    await dialog.showMessageBox(mainWindow, {
+      type: "info",
+      title: "检查更新",
+      message: "当前已经是最新版本。",
+      detail: `当前版本：${currentVersion}\n最新版本：${latestVersion || currentVersion}`,
+      buttons: ["确定"],
+      noLink: true,
+    });
+    return result;
+  }
+
+  const response = await dialog.showMessageBox(mainWindow, {
+    type: "info",
+    title: "发现新版本",
+    message: `发现新版本 ${latestVersion}`,
+    detail: `当前版本：${currentVersion}\n最新版本：${latestVersion}\n\n${release.body || ""}`.slice(0, 1800),
+    buttons: ["下载安装包", "打开发布页", "稍后"],
+    defaultId: 0,
+    cancelId: 2,
+    noLink: true,
+  });
+
+  if (response.response === 0 && result.downloadUrl) {
+    await shell.openExternal(result.downloadUrl);
+  } else if (response.response === 1 && result.releaseUrl) {
+    await shell.openExternal(result.releaseUrl);
+  }
+  return result;
 }
 
 function getBinDir() {
@@ -692,6 +810,7 @@ ipcMain.handle("updream:configureAndOpen", async (_event, settings) => {
   const opened = await openUpdream(configured.settings);
   return { ...configured, opened };
 });
+ipcMain.handle("updates:check", () => checkForUpdates(true));
 
 app.whenReady().then(createWindow);
 
