@@ -1,5 +1,19 @@
 # Release Notes / 更新日志
 
+## v1.0.2
+
+### 中文
+
+- 新增“检查更新”按钮。
+- 支持读取 GitHub 最新 Release，对比当前版本并提示升级。
+- 发现新版本时可直接打开安装包下载链接或 Release 页面。
+
+### English
+
+- Added a "Check for updates" button.
+- Added GitHub latest Release lookup and local version comparison.
+- Allows opening the installer download link or Release page when a newer version is available.
+
 ## v1.0.1
 
 ### 中文
